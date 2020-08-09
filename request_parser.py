@@ -106,7 +106,7 @@ if __name__ == '__main__':
     factory = NotionFactory()
     # text = input()
     # print(parse(text).__repr__().replace('None', '\033[93mNone\033[0m'))
-    f = open('requests1.txt', encoding='UTF-8')
+    f = open('requests.txt', encoding='UTF-8')
     requests_str = f.read().split('\n\n')
     all_requests = 0
     requests_failed = 0
