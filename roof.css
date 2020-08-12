@@ -1,0 +1,16 @@
+/*pages*/
+.lBox {
+    position: absolute;
+    left: 24%;
+    width: 25%;
+    background: rgba(0,255,255,0.25);
+    text-align: center;
+}
+
+.rBox {
+    position: absolute;
+    right: 24%;
+    width: 25%;
+    background: rgba(0,255,255,0.25);
+    text-align: center;
+}

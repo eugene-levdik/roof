@@ -29,4 +29,4 @@ class Request:
         return True
 
     def __repr__(self):
-        return str((self.phone, self.date, self.partner, self.amount, self.price, self.request_type))
+        return str((self.phone, self.date, self.partner, self.amount, self.price, self.request_type, self.prepaid))

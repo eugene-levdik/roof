@@ -9,6 +9,7 @@ from roof_terms import group_name, indi_name
 
 
 def find_partner(text):
+    text = text.lower()
     partner = None
     for short_name in partners_names:
         r = r'(^|\s)' + short_name.lower() + '($|\s)'
@@ -79,25 +80,32 @@ def parse_old_request(text):
 
 def parse_new_request(text):
     text = text.lower()
-    phone_search = re.search(re_phone, text)
-    phone = phone_to_text(phonenumbers.parse(phone_search.group(0), 'RU'))
-    date = dateparser.parse(text[:phone_search.start()])
-    text = text[phone_search.end():]
-
     partner = find_partner(text)
-
-    amount, price, request_type = parse_numbers_only(text)
+    text = re.sub(partner.lower(), ' ', text)
+    phone_search = re.search(re_phone, text)
+    try:
+        phone = phone_to_text(phonenumbers.parse(phone_search.group(0), 'RU'))
+        date = dateparser.parse(text[:phone_search.start()])
+        text = text[phone_search.end():]
+        amount, price, request_type = parse_numbers_only(text)
+    except Exception:
+        phone = None
+        date = None
+        amount = None
+        price = None
+        request_type = None
 
     return phone, date, partner, amount, price, request_type
 
 
-def parse(text, f='new'):
-    if f == 'new':
-        phone, date, partner, amount, price, request_type = parse_new_request(text)
-    elif f == 'old':
+def parse(text):
+    if re.search(r'\n[^$]', text):
         phone, date, partner, amount, price, request_type = parse_old_request(text)
     else:
-        raise ValueError('Unknown request format')
+        phone, date, partner, amount, price, request_type = parse_new_request(text)
+
+    if phone is None and date is None and amount is None:
+        partner = None
 
     return Request(phone, date, partner, amount, price, request_type)
 
@@ -111,7 +119,7 @@ if __name__ == '__main__':
     all_requests = 0
     requests_failed = 0
     for request_str in requests_str:
-        request = parse(request_str, f='old')
+        request = parse(request_str)
         print(request.__repr__().replace('None', '\033[93mNone\033[0m'))
     #     try:
     #         factory.push_request(request)
