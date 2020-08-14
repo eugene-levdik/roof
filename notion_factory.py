@@ -23,5 +23,6 @@ class NotionFactory:
         row.ot_kogo = request.partner
         row.kol_vo = request.amount
         row.tip = request.request_type
+        row.prishli = request.came
         if request.prepaid != 0:
             row.predoplata = request.prepaid

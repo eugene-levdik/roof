@@ -4,7 +4,7 @@ import re
 from notion_factory import NotionFactory
 from request import Request
 from roof_terms import partners_names
-from roof_terms import re_ignore, re_phone, re_time
+from roof_terms import re_ignore, re_phone, re_time, re_price
 from roof_terms import group_name, indi_name
 
 
@@ -75,19 +75,28 @@ def parse_old_request(text):
 
     amount, price, request_type = parse_numbers_only(text)
 
-    return phone, date, partner, amount, price, request_type
+    return phone, date, partner, amount, price, request_type, False
 
 
 def parse_new_request(text):
     text = text.lower()
+    if text.endswith('+'):
+        came = True
+        text = text[:-1]
+    else:
+        came = False
+        if text.endswith('-'):
+            text = text[:-1]
     partner = find_partner(text)
     text = re.sub(partner.lower(), ' ', text)
     phone_search = re.search(re_phone, text)
+    price_search = re.search(re_price, text)
+    if len(re.findall(re_price, text)) > 1:
+        print("\033[91mWarning: multiple pricing!!!\033[0m")
     try:
         phone = phone_to_text(phonenumbers.parse(phone_search.group(0), 'RU'))
-        date = dateparser.parse(text[:phone_search.start()])
-        text = text[phone_search.end():]
-        amount, price, request_type = parse_numbers_only(text)
+        date = dateparser.parse(text[:min(phone_search.start(), price_search.start())])
+        amount, price, request_type = parse_numbers_only(price_search.group(0))
     except Exception:
         phone = None
         date = None
@@ -95,36 +104,34 @@ def parse_new_request(text):
         price = None
         request_type = None
 
-    return phone, date, partner, amount, price, request_type
+    return phone, date, partner, amount, price, request_type, came
 
 
 def parse(text):
     if re.search(r'\n[^$]', text):
-        phone, date, partner, amount, price, request_type = parse_old_request(text)
+        phone, date, partner, amount, price, request_type, came = parse_old_request(text)
     else:
-        phone, date, partner, amount, price, request_type = parse_new_request(text)
+        phone, date, partner, amount, price, request_type, came = parse_new_request(text)
 
     if phone is None and date is None and amount is None:
         partner = None
 
-    return Request(phone, date, partner, amount, price, request_type)
+    return Request(phone, date, partner, amount, price, request_type, came=came)
 
 
 if __name__ == '__main__':
     factory = NotionFactory()
-    # text = input()
-    # print(parse(text).__repr__().replace('None', '\033[93mNone\033[0m'))
-    f = open('requests.txt', encoding='UTF-8')
+    f = open('1408.txt', encoding='UTF-8')
     requests_str = f.read().split('\n\n')
     all_requests = 0
     requests_failed = 0
     for request_str in requests_str:
         request = parse(request_str)
-        print(request.__repr__().replace('None', '\033[93mNone\033[0m'))
-    #     try:
-    #         factory.push_request(request)
-    #     except TypeError:
-    #         print('Failed:' + request.__repr__().replace('None', '\033[93mNone\033[0m'))
-    #         requests_failed += 1
-    #     all_requests += 1
-    # print(all_requests, requests_failed)
+        all_requests += 1
+        # print(request.__repr__().replace('None', '\033[93mNone\033[0m'))
+        try:
+            factory.push_request(request)
+        except TypeError:
+            print('Failed:' + request.__repr__().replace('None', '\033[93mNone\033[0m'))
+            requests_failed += 1
+    print(all_requests, requests_failed)

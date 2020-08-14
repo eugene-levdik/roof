@@ -5,11 +5,12 @@ from roof_terms import partners_names, group_name, indi_name, date_name, re_phon
 
 class Request:
 
-    def __init__(self, phone, date, partner, amount, price, request_type, prepaid=0):
+    def __init__(self, phone, date, partner, amount, price, request_type, prepaid=0, came=False):
         self.phone, self.date, self.partner, self.amount, self.price, self.request_type = \
             phone, date, partner, amount, price, request_type
         self.prepaid = prepaid
         self.is_valid = self.check_validity()
+        self.came = came
 
     def check_validity(self):
         if self.phone is None or not re.search(re_phone, self.phone):
@@ -29,4 +30,4 @@ class Request:
         return True
 
     def __repr__(self):
-        return str((self.phone, self.date, self.partner, self.amount, self.price, self.request_type, self.prepaid))
+        return str((self.phone, self.date, self.partner, self.amount, self.price, self.request_type, self.prepaid, self.came))

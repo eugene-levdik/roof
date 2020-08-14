@@ -1,5 +1,5 @@
 venv/ 
 env/
 .idea/
-requests.txt
+*.txt
 __pycache__/
