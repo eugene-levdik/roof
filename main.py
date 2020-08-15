@@ -1,11 +1,11 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 from request_parser import parse, phone_to_text
 import phonenumbers
 from roof_terms import partners_names
 from notion_factory import NotionFactory
-from request_form_html import html_str
 import dateparser
 from request import Request
+
 app = Flask(__name__, static_url_path='')
 
 
@@ -33,18 +33,17 @@ def upload_request():
         request_to_parse = ''
 
     r = parse(request_to_parse)
-    phone = r.phone
+    phone = '' if r.phone is None else r.phone
     if r.date is None:
-        date_str = None
-        time_str = None
+        date_str = ''
+        time_str = ''
     else:
         s = r.date.isoformat()
         date_str = s[:10]
         time_str = s[11:-3]
-    amount = r.amount
-    price = r.price
-    partner = r.partner
-    request_type = r.request_type
+    amount = '' if r.amount is None else r.amount
+    price = '' if r.price is None else r.price
+    partner = '' if r.partner is None else r.partner
 
     partners_html = ['<option hidden disabled selected>Партнёр</option>']
     for short_name in partners_names:
@@ -52,8 +51,8 @@ def upload_request():
         partners_html.append(short_name)
         partners_html.append('</option>')
     partners_html = ''.join(partners_html)
-
-    return html_str(request_to_parse, phone, date_str, time_str, amount, price, partners_html, request_type)
+    return render_template('request_form.html', request_to_parse=request_to_parse, phone=phone, date=date_str,
+                           time=time_str, amount=amount, price=price, partners_html=partners_html)
 
 
 if __name__ == '__main__':
