@@ -6,8 +6,6 @@ from roof_terms import partners_names, re_phone
 from notion_factory import NotionFactory
 import dateparser
 from request import Request
-from datetime import datetime
-from pytz import timezone
 
 app = Flask(__name__, static_url_path='')
 Mobility(app)
@@ -15,6 +13,7 @@ Mobility(app)
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_request():
+    message = ''
     if request.method == 'POST':
         phone = phone_to_text(phonenumbers.parse(request.form.get('phone'), 'RU'))
         date = dateparser.parse(request.form.get('date') + ' ' + request.form.get('time'))
@@ -24,13 +23,12 @@ def upload_request():
         prepaid_str = request.form.get('prepaid')
         prepaid = 0 if len(prepaid_str) == 0 else int(prepaid_str)
         r = Request(phone, date, partner, amount, price, prepaid=prepaid)
-        print(r)
         try:
             factory = NotionFactory()
             factory.push_request(r)
-            return 'Заяака успешно отправлена.'
+            message = Markup('<span style="color: green">Успешно</span>')
         except Exception:
-            return 'Что-то пошло не так :('
+            message = Markup('<span style="color: red">Ошибка</span>')
 
     request_to_parse = request.args.get('text')
     if request_to_parse is None:
@@ -58,9 +56,10 @@ def upload_request():
     if request.MOBILE:
         return render_template('mobile_request_form.html', request_to_parse=request_to_parse, phone=phone,
                                date=date_str, time=time_str, amount=amount, price=price, partners_html=partners_html,
-                               re_phone=re_phone)
+                               re_phone=re_phone, message=message)
     return render_template('request_form.html', request_to_parse=request_to_parse, phone=phone, date=date_str,
-                           time=time_str, amount=amount, price=price, partners_html=partners_html, re_phone=re_phone)
+                           time=time_str, amount=amount, price=price, partners_html=partners_html, re_phone=re_phone,
+                           message=message)
 
 
 if __name__ == '__main__':

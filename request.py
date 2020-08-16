@@ -17,7 +17,6 @@ class Request:
         self.is_valid = self.check_validity()
 
     def check_validity(self):
-        print(self.phone, self.date, self.partner, self.amount, self.price, self.request_type, self.prepaid, self.came)
         if self.phone is None or not re.search(re_phone, self.phone):
             return False
         if type(self.date) is not datetime.datetime:
