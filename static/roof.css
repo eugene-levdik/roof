@@ -3,6 +3,12 @@
     font-family: Montserrat;
 }
 
+input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
 div {
     display: table;
     margin: 0 auto;

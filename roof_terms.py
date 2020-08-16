@@ -14,7 +14,7 @@ date_name = 'Свидание'
 
 
 if __name__ == '__main__':
-    text = open('1408.txt', encoding='UTF-8').read()
+    text = open('a.txt', encoding='UTF-8').read()
     p = re.findall(re_price, text)
     print(p)
     print(len(p))

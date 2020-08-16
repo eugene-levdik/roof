@@ -121,7 +121,7 @@ def parse(text):
 
 if __name__ == '__main__':
     factory = NotionFactory()
-    f = open('1408.txt', encoding='UTF-8')
+    f = open('a.txt', encoding='UTF-8')
     requests_str = f.read().split('\n\n')
     all_requests = 0
     requests_failed = 0

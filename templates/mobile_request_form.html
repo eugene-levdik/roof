@@ -29,11 +29,11 @@
         <form action="/" method="post" name="request">
             <p>
 
-                <input type="date" name="date" id="date" value="{{ date }}" required>
-                <input type="time" id="time" name="time" value="{{ time }}" required>
+                <input type="date" name="date" id="date" placeholder="дд.мм.гггг" value="{{ date }}" required>
+                <input type="time" id="time" name="time" placeholder="--:--" value="{{ time }}" required>
             </p>
             <p>
-                <input type="tel" id="phone" name="phone" placeholder="+7 (XXX) XXX-XX-XX"
+                <input type="tel" id="phone" name="phone" placeholder="+7 (xxx) xxx-xx-xx"
                        pattern="{{ re_phone }}"
                        title="Российский номер телефона"
                        value="{{ phone }}"
@@ -50,8 +50,9 @@
                 &#8381
                 <input type="number" id="prepaid" name="prepaid" placeholder="Пред."> &#8381
             </p>
-
-            <input type="submit" id="submit" value="Отправить">
+            <p>
+                <input type="submit" id="submit" value="Отправить">
+            </p>
         </form>
     </div>
 </div>

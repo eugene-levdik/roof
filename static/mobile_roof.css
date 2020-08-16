@@ -5,6 +5,12 @@
     font-size: xx-large;
 }
 
+input, select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
 .main-box {
     width: 90%;
     margin-top:20px;
