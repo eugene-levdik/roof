@@ -11,7 +11,7 @@ re_price = r'\d+\s?[*xх×]\s?\d+'
 group_name = 'Группа'
 indi_name = 'Инди'
 date_name = 'Свидание'
-
+indi_sep = 900
 
 if __name__ == '__main__':
     text = open('a.txt', encoding='UTF-8').read()

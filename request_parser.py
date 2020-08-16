@@ -5,7 +5,6 @@ from notion_factory import NotionFactory
 from request import Request
 from roof_terms import partners_names
 from roof_terms import re_ignore, re_phone, re_time, re_price
-from roof_terms import group_name, indi_name
 
 
 def find_partner(text):
@@ -32,12 +31,10 @@ def parse_numbers_only(text):
         else:
             price = n1
             amount = n2
-        request_type = group_name if price < 900 else indi_name
     except Exception:
         amount = None
         price = None
-        request_type = None
-    return amount, price, request_type
+    return amount, price
 
 
 def phone_to_text(phone):
@@ -73,9 +70,9 @@ def parse_old_request(text):
     except Exception:
         phone = None
 
-    amount, price, request_type = parse_numbers_only(text)
+    amount, price = parse_numbers_only(text)
 
-    return phone, date, partner, amount, price, request_type, False
+    return phone, date, partner, amount, price, False
 
 
 def parse_new_request(text):
@@ -96,7 +93,7 @@ def parse_new_request(text):
     try:
         phone = phone_to_text(phonenumbers.parse(phone_search.group(0), 'RU'))
         date = dateparser.parse(text[:min(phone_search.start(), price_search.start())])
-        amount, price, request_type = parse_numbers_only(price_search.group(0))
+        amount, price = parse_numbers_only(price_search.group(0))
     except Exception:
         phone = None
         date = None
@@ -104,19 +101,19 @@ def parse_new_request(text):
         price = None
         request_type = None
 
-    return phone, date, partner, amount, price, request_type, came
+    return phone, date, partner, amount, price, came
 
 
 def parse(text):
     if re.search(r'\n[^$]', text):
-        phone, date, partner, amount, price, request_type, came = parse_old_request(text)
+        phone, date, partner, amount, price, came = parse_old_request(text)
     else:
-        phone, date, partner, amount, price, request_type, came = parse_new_request(text)
+        phone, date, partner, amount, price, came = parse_new_request(text)
 
     if phone is None and date is None and amount is None:
         partner = None
 
-    return Request(phone, date, partner, amount, price, request_type, came=came)
+    return Request(phone, date, partner, amount, price, came=came)
 
 
 if __name__ == '__main__':

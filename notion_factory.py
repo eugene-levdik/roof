@@ -18,7 +18,7 @@ class NotionFactory:
         print(self.database.parent.views)
         row = self.database.collection.add_row()
         row.title = request.phone
-        row.data = NotionDate(request.date)
+        row.data = NotionDate(request.date, timezone='Europe/Moscow')
         row.tsena = request.price
         row.ot_kogo = request.partner
         row.kol_vo = request.amount

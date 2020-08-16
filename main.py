@@ -2,10 +2,12 @@ from flask import Flask, request, render_template, Markup
 from flask_mobility import Mobility
 from request_parser import parse, phone_to_text
 import phonenumbers
-from roof_terms import partners_names
+from roof_terms import partners_names, re_phone
 from notion_factory import NotionFactory
 import dateparser
 from request import Request
+from datetime import datetime
+from pytz import timezone
 
 app = Flask(__name__, static_url_path='')
 Mobility(app)
@@ -19,10 +21,10 @@ def upload_request():
         amount = int(request.form.get('amount'))
         price = int(request.form.get('price'))
         partner = request.form.get('partner')
-        request_type = request.form.get('request_type')
         prepaid_str = request.form.get('prepaid')
         prepaid = 0 if len(prepaid_str) == 0 else int(prepaid_str)
-        r = Request(phone, date, partner, amount, price, request_type, prepaid)
+        r = Request(phone, date, partner, amount, price, prepaid=prepaid)
+        print(r)
         try:
             factory = NotionFactory()
             factory.push_request(r)
@@ -47,7 +49,7 @@ def upload_request():
     price = '' if r.price is None else r.price
     partner = '' if r.partner is None else r.partner
 
-    partners_html = ['<option hidden disabled selected>Партнёр</option>']
+    partners_html = ['<option value="" hidden disabled selected>Партнёр</option>']
     for short_name in partners_names:
         partners_html.append(f'<option{" selected" if partner == short_name else ""}>')
         partners_html.append(short_name)
@@ -55,9 +57,10 @@ def upload_request():
     partners_html = Markup(''.join(partners_html))
     if request.MOBILE:
         return render_template('mobile_request_form.html', request_to_parse=request_to_parse, phone=phone,
-                               date=date_str, time=time_str, amount=amount, price=price, partners_html=partners_html)
+                               date=date_str, time=time_str, amount=amount, price=price, partners_html=partners_html,
+                               re_phone=re_phone)
     return render_template('request_form.html', request_to_parse=request_to_parse, phone=phone, date=date_str,
-                           time=time_str, amount=amount, price=price, partners_html=partners_html)
+                           time=time_str, amount=amount, price=price, partners_html=partners_html, re_phone=re_phone)
 
 
 if __name__ == '__main__':

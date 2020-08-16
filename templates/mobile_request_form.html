@@ -9,11 +9,6 @@
        body {
         background-image: url({{ url_for('static', filename='background.png') }});
        }
-
-
-
-
-
     </style>
 </head>
 <body>
@@ -29,8 +24,10 @@
         <form action="/" method="post" name="request">
             <p>
 
-                <input type="date" name="date" id="date" placeholder="дд.мм.гггг" value="{{ date }}" required>
-                <input type="time" id="time" name="time" placeholder="--:--" value="{{ time }}" required>
+                <input type="date" name="date" id="date" placeholder="Дата"
+                       onchange="this.className=(this.value!=''?'has-value':'')" value="{{ date }}" required>
+                <input type="time" id="time" name="time" placeholder="Время"
+                       onchange="this.className=(this.value!=''?'has-value':'')" value="{{ time }}" required>
             </p>
             <p>
                 <input type="tel" id="phone" name="phone" placeholder="+7 (xxx) xxx-xx-xx"

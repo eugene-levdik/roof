@@ -66,6 +66,7 @@ input[name=phone] {
 
 select[name=partner]{
     width: 30%;
+    background-color: white;
 }
 
 input[type=number] {
@@ -74,4 +75,14 @@ input[type=number] {
 
 input[name=prepaid] {
     margin-left: 6%;
+}
+
+input[type="date"]:not(.has-value):before {
+  color: gray;
+  content: attr(placeholder);
+}
+
+input[type="time"]:not(.has-value):before {
+  color: gray;
+  content: attr(placeholder);
 }
