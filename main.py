@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, Markup
+from flask_mobility import Mobility
 from request_parser import parse, phone_to_text
 import phonenumbers
 from roof_terms import partners_names
@@ -7,6 +8,7 @@ import dateparser
 from request import Request
 
 app = Flask(__name__, static_url_path='')
+Mobility(app)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -50,7 +52,10 @@ def upload_request():
         partners_html.append(f'<option{" selected" if partner == short_name else ""}>')
         partners_html.append(short_name)
         partners_html.append('</option>')
-    partners_html = ''.join(partners_html)
+    partners_html = Markup(''.join(partners_html))
+    if request.MOBILE:
+        return render_template('mobile_request_form.html', request_to_parse=request_to_parse, phone=phone,
+                               date=date_str, time=time_str, amount=amount, price=price, partners_html=partners_html)
     return render_template('request_form.html', request_to_parse=request_to_parse, phone=phone, date=date_str,
                            time=time_str, amount=amount, price=price, partners_html=partners_html)
 

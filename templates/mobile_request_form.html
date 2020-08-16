@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Экскурсии по крышам</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='mobile_roof.css') }}">
+    <style>
+       body {
+        background-image: url({{ url_for('static', filename='background.png') }});
+       }
+
+
+
+
+
+    </style>
+</head>
+<body>
+<div class="main-box">
+    <div class="l-box">
+        <form action="/" method="get" name="parser">
+            <p><textarea name="text" placeholder="Текст заявки" rows="5">{{ request_to_parse }}</textarea></p>
+            <p><input type="submit" value="Распознать заявку"></p>
+        </form>
+    </div>
+    <p></p>
+    <div class="r-box">
+        <form action="/" method="post" name="request">
+            <p>
+
+                <input type="date" name="date" id="date" value="{{ date }}" required>
+                <input type="time" id="time" name="time" value="{{ time }}" required>
+            </p>
+            <p>
+                <input type="tel" id="phone" name="phone" placeholder="+7 (XXX) XXX-XX-XX"
+                       pattern="{{ re_phone }}"
+                       title="Российский номер телефона"
+                       value="{{ phone }}"
+                       required>
+                <select name="partner" id="partner" required>
+                    {{ partners_html }}
+                </select>
+            </p>
+
+            <p>
+                <input type="number" id="amount" name="amount" placeholder="Кол-во" value="{{ amount }}" required>
+                <span style="font-size: xx-large">×</span>
+                <input type="number" id="price" name="price" placeholder="Цена" value="{{ price }}" required>
+                &#8381
+                <input type="number" id="prepaid" name="prepaid" placeholder="Пред."> &#8381
+            </p>
+
+            <input type="submit" id="submit" value="Отправить">
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,42 +1,24 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap');
+
 * {
     font-family: Montserrat;
-}
-
-div {
-    display: table;
-    margin: 0 auto;
+    font-size: xx-large;
 }
 
 .main-box {
-    width: 50%;
+    width: 90%;
+    margin-top:20px;
+    margin-left:5%;
 }
 
 .l-box, .r-box {
-    width: 100%;
     background: rgba(255,255,100,0.5);
-    padding: 0 50px 20px;
-}
-
-.input-box-left {
-    float: left;
-}
-
-.input-box-right {
-    float: right;
-}
-
-input, label, textarea, select, radio {
-    display: block;
-}
-
-label {
-    margin-top: 20px;
-    padding: 4px 4px;
-
+    padding: 10px 10%;
+    text-align: center;
 }
 
 input[type=submit] {
+  width:100%;
   background-color: #4CAF50;
   color: white;
   padding: 12px 20px;
@@ -62,6 +44,28 @@ textarea {
     width: 100%;
 }
 
+input[name=date] {
+    width: 50%;
+    margin-right: 15%;
+}
+
+input[name=time] {
+    width: 30%;
+}
+
+input[name=phone] {
+    width: 60%;
+    margin-right: 5%;
+}
+
+select[name=partner]{
+    width: 30%;
+}
+
 input[type=number] {
-    width: 10em;
+    width: 25%;
+}
+
+input[name=prepaid] {
+    margin-left: 6%;
 }
